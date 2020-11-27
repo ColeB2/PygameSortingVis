@@ -3,7 +3,8 @@ from random import randint
 from math import ceil
 from pyVariables import *
 from buttons import Button
-from menuUI import MenuUI
+from menuUI import MenuUI, LineUI
+import copy
 
 """Import set up to be able to run from visalizer.py/main.py for dev purposes"""
 if __name__ == '__main__':
@@ -43,13 +44,16 @@ class SortingVisualizer:
         self.num_lines = 50
         self.speed = 0
         self.line_array = []
+        self.line_array_c = []
         self.generate_list()
-        self.current_algorithm = insertion_sort
+        self.current_algorithm = 'Bubble'
         self.run = True
         self.run_algo = False
         self.generator = None
         self.gen_last = None
-        self.MenuUI = MenuUI(screen = screen)
+        self.MenuUI = MenuUI(screen=screen)
+        self.LineUI = LineUI(screen=screen, num_lines=self.num_lines, line_array=self.line_array)
+        self.array_change = False
 
 
 
@@ -59,13 +63,27 @@ class SortingVisualizer:
                 if event.type == pygame.QUIT:
                     self.run = False
 
-
+                if self.array_change:
+                    self.array_change = False
+                    self.draw(line_info=(None,None,None,None))
                 if self.run_algo == True:
-                    self.sort_handler(algo=self.current_algorithm)
+                    self.sort_handler(algo=self.get_sorting_algorithm())
                 if self.gen_last:
                     self.draw(self.gen_last)
                 else:
                     self.draw(line_info=(None,None,None,None))
+
+    def get_sorting_algorithm(self):
+        if self.current_algorithm == 'Bubble':
+            return bubble_sort
+        elif self.current_algorithm == 'Fast Bubble':
+            return fast_bubble_sort
+        elif self.current_algorithm == 'Selection':
+            return selection_sort
+        elif self.current_algorithm == 'Insertion':
+            return insertion_sort
+        elif self.current_algorithm == 'Shell':
+            return shell_sort
 
 
     def sort_handler(self, algo):
@@ -90,11 +108,15 @@ class SortingVisualizer:
     def generate_list(self):
         if self.num_lines != 0:
             self.line_array = []
+            self.line_array_c = []
 
         for i in range(self.num_lines):
             line = randint(1, 200)
             self.line_array.append(line)
+        self.line_array_c = copy.copy(self.line_array)
 
+
+    """UI Button Functions"""
     def pause_button_function(self):
         if self.run_algo == True:
             self.run_algo = False
@@ -111,64 +133,45 @@ class SortingVisualizer:
         line_info = next(self.generator)
         self.gen_last = (line_info)
 
+    def _reset(self):
+        self.run_algo = False
+        self.array_change = True
+        self.generator = None
+        self.gen_last = None
+
+    def reset_button_function(self):
+        self._reset()
+        self.line_array = copy.copy(self.line_array_c)
+        self.LineUI.line_array = self.line_array
+
+    def new_array_function(self):
+        self._reset()
+        self.generate_list()
+        self.LineUI.line_array = self.line_array
+
+    def bubble_sort_button_function(self):
+        self.current_algorithm = 'Bubble'
+    def fast_bubble_sort_button_function(self):
+        self.current_algorithm = 'Fast Bubble'
+    def selection_sort_button_function(self):
+        self.current_algorithm = 'Selection'
+    def insertion_sort_button_function(self):
+        self.current_algorithm = 'Insertion'
+    def shell_sort_button_function(self):
+        self.current_algorithm = 'Shell'
+
 
     def draw_menu(self):
         self.MenuUI.create_start_button(self.start_button_function)
         self.MenuUI.create_pause_button(self.pause_button_function)
         self.MenuUI.create_next_button(self.next_button_function)
-
-
-
-    def draw_lines(self, line_info):
-        """
-        Draws the all the lines, as well as colors the lines given their own
-        special colors
-
-        line1, line2 - Highlight lines - colored w LINE_HIGHLIGHT color.
-        line3, line4 - Swapping lines - colored w LINE_SWAP color.
-        """
-        for line in range(self.num_lines):
-            color = LINE_COLOR
-
-            if len(line_info) == 5:
-                if line_info[4][0] == 'insert':
-                    if line == line_info[4][1]:
-                        color = INSERTION_LINE
-                    elif line <= line_info[4][1]:
-                        color = LINE_COLOR
-                    else:
-                        color = FADED_BLUE
-                if line_info[4][0] == 'bubble':
-                    if line >= line_info[4][1]:
-                        color = SUB_ARRAY_COLOR
-
-                if line_info[4][0] == 'shell':
-                    gap = line_info[4][1]
-                    i = line_info[4][2]
-                    try:
-                        j = line_info[4][3]
-                    except:
-                        j = None
-                    if line == j:
-                        color = INSERTION_LINE
-                    elif line == i:
-                        color = LINE_COLOR
-                    elif line % gap == i % gap:
-                        color = LINE_COLOR
-                    else:
-                        color = FADED_BLUE
-
-
-
-            if line == line_info[0]  or line == line_info[1]:
-                color = LINE_HIGHLIGHT
-            if line == line_info[2] or line == line_info[3]:
-                color = LINE_SWAP
-
-            line_width = ceil(DIS_X/self.num_lines)
-            line_rect = [line * line_width, 0,
-                        line_width-1, self.line_array[line]]
-            pygame.draw.rect(screen, color, line_rect)
+        self.MenuUI.create_reset_button(self.reset_button_function)
+        self.MenuUI.create_new_array_button(self.new_array_function)
+        self.MenuUI.create_bubble_sort_button(self.bubble_sort_button_function)
+        self.MenuUI.create_fast_bubble_sort_button(self.fast_bubble_sort_button_function)
+        self.MenuUI.create_selection_sort_button(self.selection_sort_button_function)
+        self.MenuUI.create_insertion_sort_button(self.insertion_sort_button_function)
+        self.MenuUI.create_shell_sort_button(self.shell_sort_button_function)
 
 
 
@@ -177,7 +180,7 @@ class SortingVisualizer:
         pygame.display.update() method to avoid update multiple times in
         multiple places."""
         screen.fill(WHITE2)
-        self.draw_lines(line_info)
+        self.LineUI.draw_lines(line_info)
         self.draw_menu()
         pygame.display.update()
 
@@ -191,7 +194,7 @@ class SortingVisualizer:
 
         if self.run_algo:
             self.draw(line_info)
-            pygame.time.wait(100)
+            pygame.time.wait(10)
 
 
 if __name__ == '__main__':
