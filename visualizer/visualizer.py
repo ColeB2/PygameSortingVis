@@ -3,6 +3,7 @@ from random import randint
 from math import ceil
 from pyVariables import *
 from buttons import Button
+from menuUI import MenuUI
 
 """Import set up to be able to run from visalizer.py/main.py for dev purposes"""
 if __name__ == '__main__':
@@ -48,6 +49,7 @@ class SortingVisualizer:
         self.run_algo = False
         self.generator = None
         self.gen_last = None
+        self.MenuUI = MenuUI(screen = screen)
 
 
 
@@ -93,16 +95,16 @@ class SortingVisualizer:
             line = randint(1, 200)
             self.line_array.append(line)
 
-    def pause_button(self):
+    def pause_button_function(self):
         if self.run_algo == True:
             self.run_algo = False
 
 
-    def start_button(self):
+    def start_button_function(self):
         if self.run_algo == False:
             self.run_algo = True
 
-    def next_button(self):
+    def next_button_function(self):
         """CREATE ALGORITHM GENERATOR FUNCTION"""
         if self.generator == None:
             self.generator = self.current_algorithm(self.line_array)
@@ -111,20 +113,9 @@ class SortingVisualizer:
 
 
     def draw_menu(self):
-        self.StartButton = Button(x=STARTBTN_X, y=BTN_Y, width=100, height=50,
-            font_size=25, color=STARTBTNCOL1, color2=STARTBTNCOL2, text='Start',
-            display=screen, function=self.start_button)
-        self.StartButton.create_button()
-
-        self.PauseButton = Button(x=PAUSEBTN_X, y=BTN_Y, width=100, height=50,
-            font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='Pause',
-            display=screen, function=self.pause_button)
-        self.PauseButton.create_button()
-
-        self.NextButton = Button(x=NEXTBTN_X, y=BTN_Y, width=100, height=50,
-            font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='>',
-            display=screen, function=self.next_button)
-        self.NextButton.create_button()
+        self.MenuUI.create_start_button(self.start_button_function)
+        self.MenuUI.create_pause_button(self.pause_button_function)
+        self.MenuUI.create_next_button(self.next_button_function)
 
 
 
