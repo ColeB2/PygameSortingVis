@@ -30,6 +30,10 @@ TODO LIST:
 - Reset Button
 - New Array button
 - Rewind button?
+
+Known Bugs:
+Program hangs/freezes/crashses if you hit start on an already complete array,
+without first resetting.
 """
 """Pygame code to set up screen"""
 pygame.init()
@@ -41,7 +45,7 @@ pygame.display.set_caption('Sorting Visualizer')
 class SortingVisualizer:
 
     def __init__(self):
-        self.num_lines = 50
+        self.num_lines = 5
         self.speed = 0
         self.line_array = []
         self.line_array_c = []
@@ -95,7 +99,10 @@ class SortingVisualizer:
             self.generator = algo(self.line_array)
         while self.run_algo:
             for line_info in self.generator:
-                if self.run_algo:
+                if line_info == 'Complete':
+                    self.run_algo = False
+                    self.update_lines(line_info=(None, None,None, None))
+                elif self.run_algo:
                     self.update_lines(line_info)
                 else:
                     self.gen_last = line_info

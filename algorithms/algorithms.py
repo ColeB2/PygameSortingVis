@@ -17,6 +17,7 @@ def bubble_sort(array, *args):
                 yield None, None, j, j+1, ('bubble', pass_num+1)
                 array[j], array[j+1] = array[j+1], array[j]
                 yield None, None, j, j+1, ('bubble', pass_num+1)
+    yield 'Complete'
 
 
 def fast_bubble_sort(array):
@@ -36,7 +37,10 @@ def fast_bubble_sort(array):
 
 
         if swap == False:
-            raise StopIteration()
+            break
+    yield 'Complete'
+            #raise StopIteration()
+
 
 
 """Selection Sort"""
@@ -59,6 +63,7 @@ def selection_sort(array):
         array[position_max]) = (array[position_max],
         array[fill_slot])
         yield None, None, fill_slot, position_max, ('bubble', fill_slot+1)
+    yield 'Complete'
 
 
 """Insertion Sort"""
@@ -85,6 +90,7 @@ def insertion_sort(array):
             j-=1
         array[j+1] = item
         yield None, None, None, None, ('insert', i)
+    yield 'Complete'
 
 
 """Shell Sort"""
@@ -120,6 +126,7 @@ def shell_sort(array):
         gap //= 2
 
     yield None, None, None, None, ('shell', -1, -1)
+    yield 'Complete'
 
 
 '''Heap Sort'''
