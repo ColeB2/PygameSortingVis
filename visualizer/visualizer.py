@@ -58,6 +58,7 @@ class SortingVisualizer:
         self.MenuUI = MenuUI(screen=screen)
         self.LineUI = LineUI(screen=screen, num_lines=self.num_lines, line_array=self.line_array)
         self.array_change = False
+        self.complete = False
 
 
 
@@ -101,6 +102,7 @@ class SortingVisualizer:
             for line_info in self.generator:
                 if line_info == 'Complete':
                     self.run_algo = False
+                    self.complete = True
                     self.update_lines(line_info=(None, None,None, None))
                 elif self.run_algo:
                     self.update_lines(line_info)
@@ -130,7 +132,7 @@ class SortingVisualizer:
 
 
     def start_button_function(self):
-        if self.run_algo == False:
+        if self.run_algo == False and self.complete == False:
             self.run_algo = True
 
     def next_button_function(self):
@@ -145,6 +147,7 @@ class SortingVisualizer:
         self.array_change = True
         self.generator = None
         self.gen_last = None
+        self.complete = False
 
     def reset_button_function(self):
         self._reset()
