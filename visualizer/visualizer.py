@@ -21,10 +21,9 @@ else:
         )
 """
 TODO LIST:
-- Create algorithm generator FUNCTION
 - Further refactoring
 - Break up code, UI things and functional things
-- Add more algorithms
+- Add more algorithms ---- Heap, Merge, Quick-Sort
 - Algorithm select buttons
 - Speed select buttons, slider?
 - Reset Button
@@ -32,8 +31,7 @@ TODO LIST:
 - Rewind button?
 
 Known Bugs:
-Program hangs/freezes/crashses if you hit start on an already complete array,
-without first resetting.
+-Running program again with already solved array - being able to
 """
 """Pygame code to set up screen"""
 pygame.init()
@@ -45,7 +43,7 @@ pygame.display.set_caption('Sorting Visualizer')
 class SortingVisualizer:
 
     def __init__(self):
-        self.num_lines = 5
+        self.num_lines = 25
         self.speed = 0
         self.line_array = []
         self.line_array_c = []
