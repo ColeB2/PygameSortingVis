@@ -46,15 +46,30 @@ class Button:
         self.display = display
         self.function = function
 
-        self.button_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+
+        self._resize_text()
+        self.create_pygame_objects()
         self.mouse = pygame.mouse.get_pos()
         self.click = pygame.mouse.get_pressed()
         self.clicked = False
 
 
-    def _handle_text_length(self):
+
+
+    def create_pygame_objects(self):
+        """Internal method used to create pygame objects, and run pygame methods
+        to handle the inital creation of the button rectangle, and font
+        rectangle/text."""
+        self.button_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.pygame_font = pygame.font.SysFont(self.font, int(self.font_size))
+        self.pygame_text = self.pygame_font.render(self.text, True, self.font_color)
+        self.text_rect = self.pygame_text.get_rect()
+        self.text_rect.center = (self.x + self.width/2,self.y + self.height/2)
+
+
+    def _resize_text(self):
         """For internal use. Handles the sizing of the font so that the text
-         can fit insize of the button."""
+         can fit inside of the button."""
         if len(self.text) >= 12:
             self.font_size = self.height/4
         elif len(self.text) >=9:
@@ -62,43 +77,39 @@ class Button:
         elif len(self.text) >= 6:
             self.font_size = self.height/2 - (self.height*0.1)
 
-    def _handle_button_colors(self):
-        """For internal use. Handles the color changing of the button during
-        mouse hover event."""
-        if self.button_rect.collidepoint((self.mouse[0], self.mouse[1])):
-            pygame.draw.rect(self.display, self.color2,
-                            (self.x, self.y, self.width, self.height))
 
-            self._handle_button_click()
-
-        else:
-            pygame.draw.rect(self.display, self.color,
-                            (self.x, self.y, self.width, self.height))
-
-
-    def _handle_button_click(self):
+    def _handle_button_click(self, *args):
         """For internal use. Handles how the button reacts, ie calls function,
-        on a mouse click event, if the function exists."""
+        on a mouse click event, if the function exists.
+        params:
+            *args
+        """
         if self.click[0] == 1 and self.function != None:
-            if self.click[0] == 0:
-                print(self.click)
             self.click = True
-            self.function()
+            self.function(*args)
         else:
             None
 
 
-    def _handle_button_text(self):
-        font = pygame.font.SysFont(self.font, int(self.font_size))
-        text = font.render(self.text, True, self.font_color)
-        text_rect = text.get_rect()
-        text_rect.center = (self.x + self.width/2,
-                            self.y + self.height/2)
-        self.display.blit(text, text_rect)
+    def _handle_button_logic(self, *args):
+        """For internal use. Handles all the logic of the button. Does so by
+        checking for collision, and depending on collision, drawing the button,
+        and checking for clicks."""
+        if self.button_rect.collidepoint((self.mouse[0]), self.mouse[1]):
+            pygame.draw.rect(self.display, self.color2,
+                             (self.x, self.y, self.width, self.height))
+            self.display.blit(self.pygame_text, self.text_rect)
+            self._handle_button_click(*args)
+        else:
+            pygame.draw.rect(self.display, self.color,
+                             (self.x, self.y, self.width, self.height))
+            self.display.blit(self.pygame_text, self.text_rect)
 
 
-    def create_button(self):
-        '''Displays the button with text, and multiple colours on the screen'''
-        self._handle_text_length()
-        self._handle_button_colors()
-        self._handle_buton_text()
+    def create_button(self, *args):
+        """Main Button creation method
+        Parameters:
+            *args: *args other arguments that may need to be passed on to the
+        function method which will be called by the button class.
+        """
+        self._handle_button_logic(*args)
