@@ -50,35 +50,35 @@ class MenuUI:
         self.bubble_sort_button = Button(x=50, y=BTN_Y, width=100, height=50,
             font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='Bubble',
             display=self.screen, function=func)
-        self.bubble_sort_button.create_button()
+        self.bubble_sort_button.create_button(self.bubble_sort_button.text)
 
 
     def create_fast_bubble_sort_button(self, func):
         self.fast_bubble_sort_button = Button(x=175, y=BTN_Y, width=100, height=50,
             font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='Fast Bubble',
             display=self.screen, function=func)
-        self.fast_bubble_sort_button.create_button()
+        self.fast_bubble_sort_button.create_button(self.fast_bubble_sort_button.text)
 
 
     def create_selection_sort_button(self, func):
         self.selection_sort_button = Button(x=300, y=BTN_Y, width=100, height=50,
             font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='Selection',
             display=self.screen, function=func)
-        self.selection_sort_button.create_button()
+        self.selection_sort_button.create_button(self.selection_sort_button.text)
 
 
     def create_insertion_sort_button(self, func):
         self.insertion_sort_button = Button(x=425, y=BTN_Y, width=100, height=50,
             font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='Insertion',
             display=self.screen, function=func)
-        self.insertion_sort_button.create_button()
+        self.insertion_sort_button.create_button(self.insertion_sort_button.text)
 
 
     def create_shell_sort_button(self, func):
         self.shell_sort_button = Button(x=550, y=BTN_Y, width=100, height=50,
             font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='Shell',
             display=self.screen, function=func)
-        self.shell_sort_button.create_button()
+        self.shell_sort_button.create_button(self.shell_sort_button.text)
 
 
 class LineUI:

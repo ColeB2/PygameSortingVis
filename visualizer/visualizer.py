@@ -157,16 +157,9 @@ class SortingVisualizer:
         self.generate_list()
         self.LineUI.line_array = self.line_array
 
-    def bubble_sort_button_function(self):
-        self.current_algorithm = 'Bubble'
-    def fast_bubble_sort_button_function(self):
-        self.current_algorithm = 'Fast Bubble'
-    def selection_sort_button_function(self):
-        self.current_algorithm = 'Selection'
-    def insertion_sort_button_function(self):
-        self.current_algorithm = 'Insertion'
-    def shell_sort_button_function(self):
-        self.current_algorithm = 'Shell'
+
+    def algo_button_function(self, button_text):
+        self.current_algorithm = str(button_text)
 
 
     def draw_menu(self):
@@ -175,11 +168,11 @@ class SortingVisualizer:
         self.MenuUI.create_next_button(self.next_button_function)
         self.MenuUI.create_reset_button(self.reset_button_function)
         self.MenuUI.create_new_array_button(self.new_array_function)
-        self.MenuUI.create_bubble_sort_button(self.bubble_sort_button_function)
-        self.MenuUI.create_fast_bubble_sort_button(self.fast_bubble_sort_button_function)
-        self.MenuUI.create_selection_sort_button(self.selection_sort_button_function)
-        self.MenuUI.create_insertion_sort_button(self.insertion_sort_button_function)
-        self.MenuUI.create_shell_sort_button(self.shell_sort_button_function)
+        self.MenuUI.create_bubble_sort_button(self.algo_button_function)
+        self.MenuUI.create_fast_bubble_sort_button(self.algo_button_function)
+        self.MenuUI.create_selection_sort_button(self.algo_button_function)
+        self.MenuUI.create_insertion_sort_button(self.algo_button_function)
+        self.MenuUI.create_shell_sort_button(self.algo_button_function)
 
 
 
