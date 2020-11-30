@@ -3,9 +3,10 @@ Algorithms to be used with the soring visualizer
 Created as generators so as to return states for
 drawing and visualizing purposes.
 """
+import copy
 
 """BUBBLE SORT"""
-def bubble_sort(array, *args):
+def bubble_sort(array):
     n = len(array)
 
     for pass_num in range(n-1, 0, -1):
@@ -128,6 +129,121 @@ def shell_sort(array):
     yield None, None, None, None, ('shell', -1, -1)
     yield 'Complete'
 
+"""Merge Sort"""
+def merge_sort(array, sub_array=None):
+    if sub_array == None:
+        print(sub_array)
+        sub_array = copy.copy(array)
+    n = len(sub_array)
+    print(f"len of the array(sub_array) {n}")
+    """Splitting"""
+    if len(sub_array) > 1:
+        mid = n // 2
+        left = sub_array[:mid]
+        right = sub_array[mid:]
+        yield None, None, None, None, ('splitting', left, right, mid)
+
+        """Pass full array in for drawing purposes"""
+        print('before function recursive')
+        merge_sort(array, left)
+        merge_sort(array, right)
+        print('passed function')
+
+        i=j=k=0
+
+        """Merging"""
+        while i < len(left) and j < len(right):
+            print('Merging')
+            yield array[k], None, None, None, ('merge', array)
+            if left[i] < right[j]:
+                sub_array[k] = left[i]
+                #array[k] = left[i]
+                i += 1
+            else:
+                sub_array[k] = right[j]
+                #array[k] = right[j]
+                j += 1
+            k += 1
+            yield None, array[k], None, None, ('merge', array)
+
+        """Finish Merge when i or j hits endpoint"""
+        while i < len(left):
+            yield None, None, None, None, ('merge', array)
+            sub_array[k] = left[i]
+            #array[k] = left[i]
+            i += 1
+            k += 1
+            yield None, None, None, None, ('merge', array)
+            print(f"after merge, normal array, plus sub array")
+            print(array)
+            print(sub_array)
+
+        while j < len(right):
+            yield None, None, None, None, ('merge', array)
+            sub_array[k] = right[j]
+            #array[k] = right[j]
+            j += 1
+            k += 1
+            yield None, None, None, None, ('merge', array)
+            print(f"after merge, normal array, plus sub array")
+            print(array)
+            print(sub_array)
+
+    print(array)
+    print(sub_array)
+    print('COMPLETED')
+    yield None, None, None, None, ('merge', array)
+    yield 'Complete'
+
+"""Merge Sort"""
+def merge_sort(array):
+    """Splitting 2 Electric Boogaloo"""
+    n = len(array)
+    if len(array) > 1:
+        """Splitt """
+        mid = n // 2
+        left = array[:mid]
+        right = array[mid:]
+        yield None, None, None, None, ('splitting', left, right, mid)
+
+        """Pass full array in for drawing purposes"""
+        merge_sort(left)
+        merge_sort(right)
+
+        i=j=k=0
+
+        """Merging"""
+        while i < len(left) and j < len(right):
+            yield array[k], None, None, None, ('merge', array)
+            if left[i] < right[j]:
+                array[k] = left[i]
+                i += 1
+            else:
+                array[k] = right[j]
+                j += 1
+            k += 1
+            yield None, array[k], None, None, ('merge', array)
+
+        """Finish Merge when i or j hits endpoint"""
+        while i < len(left):
+            yield None, None, None, None, ('merge', array)
+            array[k] = left[i]
+            i += 1
+            k += 1
+            yield None, None, None, None, ('merge', array)
+
+        while j < len(right):
+            yield None, None, None, None, ('merge', array)
+            array[k] = right[j]
+            j += 1
+            k += 1
+            yield None, None, None, None, ('merge', array)
+
+    yield None, None, None, None, ('merge', array)
+    yield 'Complete'
+def merge_helper(array):
+    pass
+
 
 '''Heap Sort'''
 def heap_sort(array):
@@ -171,9 +287,13 @@ def heap_sort(array):
             if index >= i:
                 break
 
-'''Merge Sort, adjusted from code @'''
-'''https://github.com/Orangefish/algo/blob/master/sorting_and_search/sort_merge.py'''
-def merge_sort(array, l=0, u=None):
+"""Merge Sort, adjusted from code @
+https://github.com/Orangefish/algo/blob/master/sorting_and_search/sort_merge.py
+which itself is based on:
+https://github.com/liuxinyu95/AlgoXY/blob/algoxy/sorting/merge-sort/src/mergesort.c
+https://stackoverflow.com/questions/2571049/how-to-sort-in-place-using-the-merge-sort-algorithm/15657134#15657134
+"""
+def merge_sortX(array, l=0, u=None):
     """
     Merge sorting, mutable input.
     Input Sequence changed in place.
@@ -204,9 +324,9 @@ def merge_sort(array, l=0, u=None):
         while n > l: # fallback to insert sort
             for m in range(n, u):
                 if array[m-1] > array[m]:
-                    yield 'compare', array, m-1, m, None
+                    yield m-1, m, None, None, ('insert', n)
                     array[m-1], array[m] = array[m], array[m-1]
-                    yield 'swapping', array, m-1, m, None
+                    yield None, None, m-1, m, ('insert', n)
             n -= 1
 
 def wmerge(array, i, m, j, n, w):
@@ -217,26 +337,26 @@ def wmerge(array, i, m, j, n, w):
     """
     while i < m and j < n:
         if array[i] < array[j]:
-            yield 'compare', array, i, w, None
+            yield i, w, None, None
             array[i], array[w] = array[w], array[i]
-            yield 'swapping', array, i, w, None
+            yield None, None, i, w
             i += 1
         else:
-            yield 'compare', array, j, w, None
+            yield j, w, None, None
             array[j], array[w] = array[w], array[j]
-            yield 'swapping', array, j, w, None
+            yield None, None, j, w
             j += 1
         w += 1
     while i < m:
-        yield 'compare',array,  i, w, None
+        yield i, w, None, None
         array[i], array[w] = array[w], array[i]
-        yield 'swapping', array, i, w, None
+        yield None, None,i, w
         i += 1
         w += 1
     while j < n:
-        yield 'compare', array, j, w, None
+        yield j, w, None, None
         array[j], array[w] = array[w], array[j]
-        yield 'swapping', array, j, w, None
+        yield None, None, j, w
         j += 1
         w += 1
 
@@ -252,9 +372,9 @@ def wsort(array, l, u, w):
         yield from wmerge(array, l, m, m, u, w)
     else:
         while l < u:
-            yield 'compare', array, l, w, None
+            yield l, w, None, None
             array[l], array[w] = array[w], array[l]
-            yield 'swapping', array, l, w, None
+            yield None, None, l, w
             l +=1
             w +=1
 

@@ -12,12 +12,12 @@ if __name__ == '__main__':
     sys.path.append(os.path.join('.', 'algorithms'))
     from algorithms import (
         bubble_sort, fast_bubble_sort, selection_sort, insertion_sort,
-        shell_sort
+        shell_sort, merge_sort
         )
 else:
     from algorithms.algorithms import (
         bubble_sort, fast_bubble_sort, selection_sort, insertion_sort,
-        shell_sort
+        shell_sort, merge_sort
         )
 """
 TODO LIST:
@@ -48,7 +48,7 @@ class SortingVisualizer:
         self.line_array = []
         self.line_array_c = []
         self.generate_list()
-        self.current_algorithm = 'Bubble'
+        self.current_algorithm = 'Merge'
         self.run = True
         self.run_algo = False
         self.generator = None
@@ -87,6 +87,8 @@ class SortingVisualizer:
             return insertion_sort
         elif self.current_algorithm == 'Shell':
             return shell_sort
+        elif self.current_algorithm == 'Merge':
+            return merge_sort
 
 
     def sort_handler(self, algo):

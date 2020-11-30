@@ -47,7 +47,8 @@ class MenuUI:
 
 
     def create_algo_buttons(self, func):
-        algos = ['Bubble', 'Fast Bubble', 'Selection', 'Insertion', 'Shell']
+        algos = ['Bubble', 'Fast Bubble', 'Selection', 'Insertion', 'Shell',
+            'Merge']
         for i in range(len(algos)):
             new_button = Button(
                 x=(50+(i*125)), y = BTN_Y, width=100, height=50, font_size=25,
@@ -103,6 +104,19 @@ class LineUI:
 
                     else:
                         color = FADED_BLUE
+
+                if line_info[4][0] == 'merge':
+                    #print(line)
+                    pass
+
+                if line_info[4][0] == 'splitting':
+                    # print(line)
+                    if line == line_info[4][3]:
+                        color = INSERTION_LINE
+                    elif line < line_info[4][3]:
+                        color = SUB_ARRAY_COLOR
+                    elif line > line_info[4][3]:
+                        color = LIGHT_RED
 
 
 
