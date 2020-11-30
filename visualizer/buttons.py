@@ -23,6 +23,7 @@ class Button:
         font_color: Tuple formatted -> font_color=(XXX,YYY,ZZZ) - RGB values for
             color of the text, default (255,255,255) - white.
         text: Str, String value of the text to appear on the button.
+        resize: Bool, Whether or not to use the built in resize function.
         display: pygame.Surface object.
         function: Function, the function the button needs to perform on click.
             Passed as so, Button(function=button_function). -> This created a
@@ -31,7 +32,7 @@ class Button:
     """
     def __init__(self, x=0, y=0, width=50, height=50, font_size=25,
         color=(255,51,51), color2=(0,255,128), font='arialblack',
-        font_color=(255,255,255),  text='Text', display=None, function=None):
+        font_color=(255,255,255),  text='Text', resize=True, display=None, function=None):
 
         self.x = x
         self.y = y
@@ -43,6 +44,7 @@ class Button:
         self.font = font
         self.font_color = font_color
         self.text = text
+        self.resize = resize
         self.display = display
         self.function = function
 
@@ -70,12 +72,13 @@ class Button:
     def _resize_text(self):
         """For internal use. Handles the sizing of the font so that the text
          can fit inside of the button."""
-        if len(self.text) >= 12:
-            self.font_size = self.height/4
-        elif len(self.text) >=9:
-            self.font_size = self.height/3
-        elif len(self.text) >= 6:
-            self.font_size = self.height/2 - (self.height*0.1)
+        if self.resize:
+            if len(self.text) >= 11:
+                self.font_size = self.height/4
+            elif len(self.text) >=9:
+                self.font_size = self.height/3
+            elif len(self.text) >= 6:
+                self.font_size = self.height/2 - (self.height*0.1)
 
 
     def _handle_button_click(self, *args):
