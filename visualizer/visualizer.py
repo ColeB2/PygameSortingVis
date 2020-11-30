@@ -168,11 +168,7 @@ class SortingVisualizer:
         self.MenuUI.create_next_button(self.next_button_function)
         self.MenuUI.create_reset_button(self.reset_button_function)
         self.MenuUI.create_new_array_button(self.new_array_function)
-        self.MenuUI.create_bubble_sort_button(self.algo_button_function)
-        self.MenuUI.create_fast_bubble_sort_button(self.algo_button_function)
-        self.MenuUI.create_selection_sort_button(self.algo_button_function)
-        self.MenuUI.create_insertion_sort_button(self.algo_button_function)
-        self.MenuUI.create_shell_sort_button(self.algo_button_function)
+        self.MenuUI.create_algo_buttons(self.algo_button_function)
 
 
 
