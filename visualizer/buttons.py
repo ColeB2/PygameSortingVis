@@ -32,7 +32,8 @@ class Button:
     """
     def __init__(self, x=0, y=0, width=50, height=50, font_size=25,
         color=(255,51,51), color2=(0,255,128), font='arialblack',
-        font_color=(255,255,255),  text='Text', resize=True, display=None, function=None):
+        font_color=(255,255,255),  text='Text', resize=True, display=None,
+        function=None, toggle=False):
 
         self.x = x
         self.y = y
@@ -47,6 +48,7 @@ class Button:
         self.resize = resize
         self.display = display
         self.function = function
+        self.toggle = toggle
 
 
         self._resize_text()

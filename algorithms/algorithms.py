@@ -130,119 +130,61 @@ def shell_sort(array):
     yield 'Complete'
 
 """Merge Sort"""
-def merge_sort(array, sub_array=None):
-    if sub_array == None:
-        print(sub_array)
-        sub_array = copy.copy(array)
-    n = len(sub_array)
-    print(f"len of the array(sub_array) {n}")
-    """Splitting"""
-    if len(sub_array) > 1:
-        mid = n // 2
-        left = sub_array[:mid]
-        right = sub_array[mid:]
-        yield None, None, None, None, ('splitting', left, right, mid)
-
-        """Pass full array in for drawing purposes"""
-        print('before function recursive')
-        merge_sort(array, left)
-        merge_sort(array, right)
-        print('passed function')
-
-        i=j=k=0
-
-        """Merging"""
-        while i < len(left) and j < len(right):
-            print('Merging')
-            yield array[k], None, None, None, ('merge', array)
-            if left[i] < right[j]:
-                sub_array[k] = left[i]
-                #array[k] = left[i]
-                i += 1
-            else:
-                sub_array[k] = right[j]
-                #array[k] = right[j]
-                j += 1
-            k += 1
-            yield None, array[k], None, None, ('merge', array)
-
-        """Finish Merge when i or j hits endpoint"""
-        while i < len(left):
-            yield None, None, None, None, ('merge', array)
-            sub_array[k] = left[i]
-            #array[k] = left[i]
-            i += 1
-            k += 1
-            yield None, None, None, None, ('merge', array)
-            print(f"after merge, normal array, plus sub array")
-            print(array)
-            print(sub_array)
-
-        while j < len(right):
-            yield None, None, None, None, ('merge', array)
-            sub_array[k] = right[j]
-            #array[k] = right[j]
-            j += 1
-            k += 1
-            yield None, None, None, None, ('merge', array)
-            print(f"after merge, normal array, plus sub array")
-            print(array)
-            print(sub_array)
-
-    print(array)
-    print(sub_array)
-    print('COMPLETED')
-    yield None, None, None, None, ('merge', array)
+def merge_sort(array):
+    n = len(array)
+    yield from merge(array)
     yield 'Complete'
 
-"""Merge Sort"""
-def merge_sort(array):
-    """Splitting 2 Electric Boogaloo"""
+def merge(array):
+    yield None, None, None, None
     n = len(array)
-    if len(array) > 1:
-        """Splitt """
-        mid = n // 2
+    if n > 1:
+        mid = len(array) // 2
         left = array[:mid]
         right = array[mid:]
-        yield None, None, None, None, ('splitting', left, right, mid)
 
-        """Pass full array in for drawing purposes"""
-        merge_sort(left)
-        merge_sort(right)
+        if n > 1:
+            yield from merge(left)
+            yield from merge(right)
 
-        i=j=k=0
-
-        """Merging"""
-        while i < len(left) and j < len(right):
-            yield array[k], None, None, None, ('merge', array)
-            if left[i] < right[j]:
-                array[k] = left[i]
-                i += 1
+        left_index = 0
+        right_index = 0
+        main_index = 0
+        yield None, None, None, None
+        print(array)
+        while left_index < len(left) and right_index < len(right):
+            if left[left_index] < right[right_index]:
+                array[main_index] = left[left_index]
+                yield None, None, None, None
+                left_index += 1
             else:
-                array[k] = right[j]
-                j += 1
-            k += 1
-            yield None, array[k], None, None, ('merge', array)
+                array[main_index] = right[right_index]
+                yield None, None, None, None
+                right_index += 1
+            main_index += 1
 
-        """Finish Merge when i or j hits endpoint"""
-        while i < len(left):
-            yield None, None, None, None, ('merge', array)
-            array[k] = left[i]
-            i += 1
-            k += 1
-            yield None, None, None, None, ('merge', array)
+        while left_index < len(left):
+            array[main_index] = left[left_index]
+            yield None, None, None, None
+            left_index += 1
+            main_index += 1
 
-        while j < len(right):
-            yield None, None, None, None, ('merge', array)
-            array[k] = right[j]
-            j += 1
-            k += 1
-            yield None, None, None, None, ('merge', array)
 
-    yield None, None, None, None, ('merge', array)
-    yield 'Complete'
-def merge_helper(array):
-    pass
+        while right_index < len(right):
+            array[main_index] = right[right_index]
+            yield None, None, None, None
+            right_index += 1
+            main_index += 1
+        # yield None, None, None, None, ('merge')
+
+
+
+
+
+
+
+
+
 
 
 '''Heap Sort'''
@@ -306,6 +248,8 @@ def merge_sortX(array, l=0, u=None):
         input changed in place
     Returns None
     """
+    a = copy.copy(array)
+    a.sort()
     u = len(array) if u is None else u
     if  u - l > 1:
         m = l + (u - l) // 2
@@ -328,6 +272,8 @@ def merge_sortX(array, l=0, u=None):
                     array[m-1], array[m] = array[m], array[m-1]
                     yield None, None, m-1, m, ('insert', n)
             n -= 1
+    if array == a:
+        yield 'Complete'
 
 def wmerge(array, i, m, j, n, w):
     """
@@ -405,3 +351,9 @@ def quick_sort_helper(array, low, high):
         '''PARTITION FUNCTION END'''
         yield from quick_sort_helper(array, low, pivot_index-1)
         yield from quick_sort_helper(array, pivot_index+1, high)
+
+
+
+if __name__ == '__main__':
+    array = [5,4,98,15,47,48,26,13,15,48,49,56,2,15,15,159]
+    merge_sort(array)
