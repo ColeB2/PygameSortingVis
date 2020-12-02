@@ -12,22 +12,20 @@ if __name__ == '__main__':
     sys.path.append(os.path.join('.', 'algorithms'))
     from algorithms import (
         bubble_sort, fast_bubble_sort, selection_sort, insertion_sort,
-        shell_sort, merge_sort
+        shell_sort, merge_sort, heap_sort
         )
 else:
     from algorithms.algorithms import (
         bubble_sort, fast_bubble_sort, selection_sort, insertion_sort,
-        shell_sort, merge_sort
+        shell_sort, merge_sort, heap_sort
         )
 """
 TODO LIST:
 - Further refactoring
 - Break up code, UI things and functional things
-- Add more algorithms ---- Heap, Merge, Quick-Sort
-- Algorithm select buttons
+- Add more algorithms ---- Heap, Merge(more work), Quick-Sort
+- Algorithm select dropdown menu?
 - Speed select buttons, slider?
-- Reset Button
-- New Array button
 - Rewind button?
 
 Known Bugs:
@@ -89,6 +87,8 @@ class SortingVisualizer:
             return shell_sort
         elif self.current_algorithm == 'Merge':
             return merge_sort
+        elif self.current_algorithm == 'Heap':
+            return heap_sort
 
 
     def sort_handler(self, algo):
@@ -120,7 +120,7 @@ class SortingVisualizer:
             self.line_array_c = []
 
         for i in range(self.num_lines):
-            line = randint(1, 200)
+            line = randint(1, 400)
             self.line_array.append(line)
         self.line_array_c = copy.copy(self.line_array)
 

@@ -190,26 +190,26 @@ def merge(array):
 '''Heap Sort'''
 def heap_sort(array):
     n = len(array)
+    comp = copy.copy(array)
+    comp.sort()
     '''BUILDINGMAXHEAP FUNCTION'''
     for i in range(n):
         '''if arr[i](child) > arr[x]parent:'''
         if array[i] > array[int((i - 1) / 2)]:
             j = i
             while array[j] > array[int((j - 1) / 2)]:
-                yield 'compare', array, j, int((j-1)/2), None
+                yield j, int((j-1)/2), None, None
                 (array[j],
                  array[int((j - 1) / 2)]) = (array[int((j - 1) / 2)],
                                            array[j])
-                yield 'swapping', array, int((j-1)/2), j, None
+                yield None, None, int((j-1)/2), j
                 j = int((j - 1) / 2)
-                yield 'draw all', array, None, None, None
 
     '''HEAP SORT'''
-    yield 'draw all', None, None, None
     for i in range(n - 1, 0, -1):
-        yield 'compare', array, i, 0, None
+        yield i, 0, None, None
         array[0], array[i] = array[i], array[0]
-        yield 'swapping', array, i, 0, None
+        yield None, None, i, 0
 
         j, index = 0, 0
 
@@ -221,14 +221,15 @@ def heap_sort(array):
                 index += 1
 
             if index < i and array[j] < array[index]:
-                yield 'compare', array, index, j, None
+                yield index, j, None, None
                 array[j], array[index] = array[index], array[j]
-                yield 'draw all', array, index, j, None
+                yield None, None, index, j
 
             j = index
             if index >= i:
                 break
-
+        if comp == array:
+            yield 'Complete'
 """Merge Sort, adjusted from code @
 https://github.com/Orangefish/algo/blob/master/sorting_and_search/sort_merge.py
 which itself is based on:
