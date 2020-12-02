@@ -46,7 +46,7 @@ class MenuUI:
         self.new_array_button.create_button()
 
 
-    def create_algo_buttons(self, func):
+    def create_algo_buttons(self, func, *args):
         algos = ['Bubble', 'Fast Bubble', 'Selection', 'Insertion', 'Shell',
             'Merge']
         for i in range(len(algos)):
