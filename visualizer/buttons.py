@@ -117,3 +117,34 @@ class Button:
         function method which will be called by the button class.
         """
         self._handle_button_logic(*args)
+
+
+if __name__ == '__main__':
+    pygame.init()
+    FPS=20
+    fps_clock = pygame.time.Clock()
+
+    screen = pygame.display.set_mode((600,600))
+    screen.fill((255,255,255))
+    pygame.display.set_caption('Button Test')
+
+    def func():
+        print('Hello World')
+    b = Button(x=250, y=275, width=100,height=50, text='HW',display=screen,function=func)
+    b.create_button()
+
+    def draw():
+        screen.fill((255,255,255))
+        b.create_button()
+        pygame.display.update()
+        fps_clock.tick(30)
+
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+                run = False
+
+            draw()
