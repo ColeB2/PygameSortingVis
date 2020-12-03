@@ -230,13 +230,15 @@ def heap_sort(array):
                 break
         if comp == array:
             yield 'Complete'
+
+
 """Merge Sort, adjusted from code @
 https://github.com/Orangefish/algo/blob/master/sorting_and_search/sort_merge.py
 which itself is based on:
 https://github.com/liuxinyu95/AlgoXY/blob/algoxy/sorting/merge-sort/src/mergesort.c
 https://stackoverflow.com/questions/2571049/how-to-sort-in-place-using-the-merge-sort-algorithm/15657134#15657134
 """
-def merge_sortX(array, l=0, u=None):
+def merge_sort(array, l=0, u=None):
     """
     Merge sorting, mutable input.
     Input Sequence changed in place.
@@ -325,30 +327,34 @@ def wsort(array, l, u, w):
             l +=1
             w +=1
 
-'''Quick Sort - Lomuto-Partition'''
+"""Quick Sort - Lomuto-Partition"""
 def quick_sort(array):
     n = len(array)
+    comp = copy.copy(array)
+    comp.sort()
     yield from quick_sort_helper(array, 0, n-1)
+    if comp == array:
+        yield 'Complete'
 
 def quick_sort_helper(array, low, high):
     if low < high:
         '''PARTITION FUNCTION START'''
         i = (low-1) #smaller element index
         pivot = array[high] #pivot value
-        yield 'compare', array, None, None, high
+        yield None, None, None, None, ('quick', high)
         for j in range(low,high):
             if array[j] < pivot:
                 i += 1
-                yield 'compare', array, i, j, high
+                yield i, j, None, None,  ('quick', high)
                 array[i], array[j] = array[j], array[i]
-                yield 'compare', array, i, j, high
+                yield None, None, i, j, ('quick', high)
 
-        yield 'compare',array,  i+1, high, None
+        yield i+1, high, None, None
         array[i+1], array[high] = array[high], array[i+1]
-        yield 'swapping', array, i+1, high, None
+        yield None, None, array, i+1
 
         pivot_index = i+1
-        yield 'compare', array, None, None, pivot_index
+        yield None, None, None, None, ('quick', pivot_index)
         '''PARTITION FUNCTION END'''
         yield from quick_sort_helper(array, low, pivot_index-1)
         yield from quick_sort_helper(array, pivot_index+1, high)

@@ -12,12 +12,12 @@ if __name__ == '__main__':
     sys.path.append(os.path.join('.', 'algorithms'))
     from algorithms import (
         bubble_sort, fast_bubble_sort, selection_sort, insertion_sort,
-        shell_sort, merge_sort, heap_sort
+        shell_sort, merge_sort, heap_sort, quick_sort
         )
 else:
     from algorithms.algorithms import (
         bubble_sort, fast_bubble_sort, selection_sort, insertion_sort,
-        shell_sort, merge_sort, heap_sort
+        shell_sort, merge_sort, heap_sort, quick_sort
         )
 """
 TODO LIST:
@@ -89,6 +89,8 @@ class SortingVisualizer:
             return merge_sort
         elif self.current_algorithm == 'Heap':
             return heap_sort
+        elif self.current_algorithm == 'Quick Sort':
+            return quick_sort
 
 
     def sort_handler(self, algo):
