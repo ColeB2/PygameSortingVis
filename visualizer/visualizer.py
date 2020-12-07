@@ -30,11 +30,13 @@ TODO LIST:
 
 Known Bugs:
 -Running program again with already solved array - being able to
+- shell sort will sometimes finish in a compare viewset
+- next button sometimes crashes - stop iteration?
 """
-"""Pygame code to set up screen"""
+"""Pygame code to set up surface"""
 pygame.init()
-screen = pygame.display.set_mode(DIS_SIZE)
-screen.fill(WHITE2)
+surface = pygame.display.set_mode(DIS_SIZE)
+surface.fill(WHITE2)
 pygame.display.set_caption('Sorting Visualizer')
 
 
@@ -51,28 +53,36 @@ class SortingVisualizer:
         self.run_algo = False
         self.generator = None
         self.gen_last = None
-        self.MenuUI = MenuUI(screen=screen)
-        self.LineUI = LineUI(screen=screen, num_lines=self.num_lines, line_array=self.line_array)
+        self.MenuUI = MenuUI(surface=surface)
+        self.LineUI = LineUI(surface=surface, num_lines=self.num_lines, line_array=self.line_array)
         self.array_change = False
         self.complete = False
 
 
 
     def main_loop(self):
+        """Main Program Loop pygame."""
+        self.create_buttons()
+
+
         while self.run:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.run = False
 
-                if self.array_change:
-                    self.array_change = False
-                    self.draw(line_info=(None,None,None,None))
-                if self.run_algo == True:
-                    self.sort_handler(algo=self.get_sorting_algorithm())
-                if self.gen_last:
-                    self.draw(self.gen_last)
-                else:
-                    self.draw(line_info=(None,None,None,None))
+                self.start_button.get_event(event)
+                self.pause_button.get_event(event)
+
+            if self.array_change:
+                self.array_change = False
+                self.draw(line_info=(None,None,None,None))
+            if self.run_algo == True:
+                self.sort_handler(algo=self.get_sorting_algorithm())
+            if self.gen_last:
+                self.draw(self.gen_last)
+            else:
+                self.draw(line_info=(None,None,None,None))
+
 
     def get_sorting_algorithm(self):
         if self.current_algorithm == 'Bubble':
@@ -96,7 +106,7 @@ class SortingVisualizer:
     def sort_handler(self, algo):
         """Handles the sorting algorithms. Does so by creating a generator using
         the given algorithm, and then handling how the generator runs to produce
-        output on the screen. Contains a pause feature, but adding last value
+        output on the surface. Contains a pause feature, but adding last value
         to a variable when the generator main loop breaks."""
         if self.generator == None:
             self.generator = algo(self.line_array)
@@ -166,21 +176,33 @@ class SortingVisualizer:
         self.current_algorithm = str(button_text)
 
 
+
     def draw_menu(self):
-        self.MenuUI.create_start_button(self.start_button_function)
-        self.MenuUI.create_pause_button(self.pause_button_function)
-        self.MenuUI.create_next_button(self.next_button_function)
-        self.MenuUI.create_reset_button(self.reset_button_function)
-        self.MenuUI.create_new_array_button(self.new_array_function)
-        self.MenuUI.create_algo_buttons(self.algo_button_function)
+        #self.MenuUI.create_start_button(self.start_button_function)
+        # self.MenuUI.create_pause_button(self.pause_button_function)
+        # self.MenuUI.create_next_button(self.next_button_function)
+        # self.MenuUI.create_reset_button(self.reset_button_function)
+        # self.MenuUI.create_new_array_button(self.new_array_function)
+        # self.MenuUI.create_algo_buttons(self.algo_button_function)
+        self.start_button.update(surface)
+        self.pause_button.update(surface)
+
+
+    def create_buttons(self):
+        self.start_button = Button(rect=(STARTBTN_X, BTN_Y2, 100, 50),
+            font_size=25, color=STARTBTNCOL1, color2=STARTBTNCOL2, text='Start',
+            function=self.start_button_function)
+        self.pause_button = Button(rect=(PAUSEBTN_X, BTN_Y2, 100, 50),
+            font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='Pause',
+            function=self.pause_button_function)
 
 
 
     def draw(self, line_info):
-        """Handles the drawing to the screen, only method that contains the
+        """Handles the drawing to the surface, only method that contains the
         pygame.display.update() method to avoid update multiple times in
         multiple places."""
-        screen.fill(WHITE2)
+        surface.fill(WHITE2)
         self.LineUI.draw_lines(line_info)
         self.draw_menu()
         pygame.display.update()
@@ -192,6 +214,8 @@ class SortingVisualizer:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+
+
 
         if self.run_algo:
             self.draw(line_info)
