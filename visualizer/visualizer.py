@@ -45,7 +45,6 @@ pygame.display.set_caption('Sorting Visualizer')
 
 
 class SortingVisualizer:
-
     def __init__(self):
         self.num_lines = 25
         self.speed = 0
@@ -57,17 +56,19 @@ class SortingVisualizer:
         self.run_algo = False
         self.generator = None
         self.gen_last = None
-        self.MenuUI = MenuUI(surface=surface)
-        self.LineUI = LineUI(surface=surface, num_lines=self.num_lines, line_array=self.line_array)
         self.array_change = False
         self.complete = False
+        self.MenuUI = MenuUI(surface=surface)
+        self.LineUI = LineUI(surface=surface, num_lines=self.num_lines,
+            line_array=self.line_array)
+
 
 
     def main_loop(self):
         """Main Program Loop pygame."""
         self.create_buttons()
         while self.run:
-            #input handling, event loop
+            """Main Loop Event Handling"""
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.run = False
@@ -78,7 +79,7 @@ class SortingVisualizer:
                 self.reset_button.get_event(event)
                 self.new_array_button.get_event(event)
 
-            #logic
+            """Main Loop Logic Handling"""
             if not self.generator:
                 algo = self.get_sorting_algorithm()
                 self.generator = algo(self.line_array)
@@ -99,9 +100,9 @@ class SortingVisualizer:
                     line_info = (None,None,None,None)
                 else:
                     line_info = (None,None,None,None)
-            else:
-                pass
 
+
+            """Main Loop Drawing"""
             self.draw(line_info)
             pygame.time.wait(10)
 
