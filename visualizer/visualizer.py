@@ -125,30 +125,6 @@ class SortingVisualizer:
             return quick_sort
 
 
-    def sort_handler(self, algo):
-        """Handles the sorting algorithms. Does so by creating a generator using
-        the given algorithm, and then handling how the generator runs to produce
-        output on the surface. Contains a pause feature, but adding last value
-        to a variable when the generator main loop breaks."""
-        algo=self.get_sorting_algorithm()
-        if self.generator == None:
-            self.generator = algo(self.line_array)
-        while self.run_algo:
-            for line_info in self.generator:
-                if line_info == 'Complete':
-                    self.run_algo = False
-                    self.complete = True
-                    self.update_lines(line_info=(None, None,None, None))
-                elif self.run_algo:
-                    self.update_lines(line_info)
-                else:
-                    self.gen_last = line_info
-                    break
-
-
-
-
-
     def generate_list(self):
         if self.num_lines != 0:
             self.line_array = []
@@ -170,6 +146,7 @@ class SortingVisualizer:
         if self.run_algo == False and self.complete == False:
             self.run_algo = True
 
+
     def next_button_function(self):
         """CREATE ALGORITHM GENERATOR FUNCTION"""
         if self.generator == None:
@@ -178,6 +155,7 @@ class SortingVisualizer:
         line_info = next(self.generator)
         self.gen_last = (line_info)
 
+
     def _reset(self):
         self.run_algo = False
         self.array_change = True
@@ -185,10 +163,12 @@ class SortingVisualizer:
         self.gen_last = None
         self.complete = False
 
+
     def reset_button_function(self):
         self._reset()
         self.line_array = copy.copy(self.line_array_c)
         self.LineUI.line_array = self.line_array
+
 
     def new_array_function(self):
         self._reset()
@@ -198,7 +178,6 @@ class SortingVisualizer:
 
     def algo_button_function(self, button_text):
         self.current_algorithm = str(button_text)
-
 
 
     def draw_menu(self):
@@ -236,25 +215,6 @@ class SortingVisualizer:
         self.draw_menu()
         pygame.display.update()
 
-    def update_lines(self, line_info):
-        """Updates the lines in the program.  Does so by calling the draw
-        function when the algorithms are running."""
-        for event in pygame.event.get():
-            print('second event loop')
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            self.start_button.get_event(event)
-            self.pause_button.get_event(event)
-            self.next_button.get_event(event)
-            self.reset_button.get_event(event)
-            self.new_array_button.get_event(event)
-
-
-
-        if self.run_algo:
-            self.draw(line_info)
-            pygame.time.wait(10)
 
 
 if __name__ == '__main__':
