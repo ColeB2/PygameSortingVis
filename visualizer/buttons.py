@@ -1,5 +1,6 @@
 '''
 buttons.py - Button class that has numberous variables to make buttons easier
+code based on -> https://github.com/Mekire/pygame-button/blob/master/button/button.py
 '''
 import pygame
 from pygame.locals import *
@@ -9,34 +10,35 @@ class Button:
     A class to aid in the creation of buttons in Pygame. Currently packaged
     with pyVariables to handle basic colors, can be replaced
 
-    Attributes:
-        rect: Tuple of int values -> (top, left, width, height), default (0,0,50,50)
-        font_size: Int, size of the font on the button, default 25.
+    Required Attributes:
+        rect: Tuple of int values -> (top, left, width, height)
+        function: Function, the function the button needs to perform on click.
+    Optional Attributes:
+        text: Str, String value of the text to appear on the button. defaults to
+            None.
+        font: pygame.font.Font() object, default pygame.font.Font(None, 25)
+            -> Change font type using the first arg in pygame.font.Font(),
+                which is a filename for the font.
+            -> Change font size using integer value as 2nd arg.
         color: Tuple formated -> color=(XXX,YYY,ZZZ) - RGB values for color of
-            button initial state, default (0,255,128) - green.
-        color2: Tuple formatted -> color2=(XXX,YYY,ZZZ) - RGB values for color
-            of button while button is hovered over, default (255,51,51) - red.
-        font: Str, font type for the text, default 'arialblack'
+            button initial state, default (0,255,128)
+        hover_color: Tuple formatted -> hover_color=(XXX,YYY,ZZZ) - RGB values for
+            color of button while button is hovered over, default (255,51,51)
         font_color: Tuple formatted -> font_color=(XXX,YYY,ZZZ) - RGB values for
-            color of the text, default (255,255,255) - white.
-        text: Str, String value of the text to appear on the button.
+            color of the text, default (255,255,255)
+        font_hover_color: Tuple formatted -> font_hover_color=(XXX,YYY,ZZZ) -
+            RGB value for color of text on button hover, default None.
+
         resize: Bool, Whether or not to use the built in resize function.
         function: Function, the function the button needs to perform on click.
             Passed as so, Button(function=button_function). -> This created a
             button (using the defaults) and passes the function, button_function
             to the button to be called upon click.
     """
-    def __init__(self, rect=(0,0,100,50), font_size=25,
-        color=(255,51,51), color2=(0,255,128), font=None,
-        font_color=(255,255,255),  text='Text', function=None):
-
+    def __init__(self, rect, function, **kwargs):
         self.rect = pygame.Rect(rect)
-        self.color = color
-        self.color2 = color2
-        self.font_size = int(font_size)
-        self.font_color = font_color
-        self.text = text
-        self.font = pygame.font.Font(font, self.font_size)
+        self.function = function
+        self.optional_settings(kwargs)
         self.render_text()
         self.function = function
         self.click = pygame.mouse.get_pressed()
@@ -50,6 +52,24 @@ class Button:
             self.pygame_text = self.font.render(self.text, True, self.font_color)
             self.text_rect = self.pygame_text.get_rect()
             self.text_rect.center = self.rect.center
+
+
+    def optional_settings(self, kwargs):
+        options = {'text': None,
+                   'font': pygame.font.Font(None, 25),
+                   'color': (255,51,51),
+                   'hover_color': (0,255,128),
+                   'font_color': (255,255,255),
+                   'font_hover_color': None,
+                   }
+
+        for kwarg in kwargs:
+            if kwarg in options:
+                options[kwarg] = kwargs[kwarg]
+            else:
+                raise AttributeError(f"Button option {kwarg} does not exist")
+        self.__dict__.update(options)
+
 
     def get_event(self, event, *args):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -77,10 +97,10 @@ class Button:
         color = self.color
         text = self.text
         self.button_hover()
-        if self.clicked and self.color2:
-            color = self.color2
+        if self.clicked and self.hover_color:
+            color = self.hover_color
         elif self.hovered:
-            color = self.color2
+            color = self.hover_color
 
         pygame.draw.rect(surface, color, self.rect)
         surface.blit(self.pygame_text, self.text_rect)
@@ -92,7 +112,7 @@ class Button:
         checking for collision, and depending on collision, drawing the button,
         and checking for clicks."""
         if self.rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(surface, self.color2, self.rect)
+            pygame.draw.rect(surface, self.hover_color, self.rect)
             surface.blit(self.pygame_text, self.text_rect)
             self._handle_button_click(*args)
         else:
