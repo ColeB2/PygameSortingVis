@@ -32,6 +32,8 @@ Known Bugs:
 -Running program again with already solved array - being able to
 - shell sort will sometimes finish in a compare viewset
 - next button sometimes crashes - stop iteration?
+- Clicking next, then resuming play can leave lines wrong color
+- Light blue blinking on Merge, Check.
 
 
 """
@@ -50,7 +52,7 @@ class SortingVisualizer:
         self.line_array = []
         self.line_array_c = []
         self.generate_list()
-        self.current_algorithm = 'Merge'
+        self.current_algorithm = 'Insertion'
         self.run = True
         self.run_algo = False
         self.generator = None
@@ -61,13 +63,11 @@ class SortingVisualizer:
         self.complete = False
 
 
-
     def main_loop(self):
         """Main Program Loop pygame."""
         self.create_buttons()
-
-
         while self.run:
+            #input handling, event loop
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.run = False
@@ -78,28 +78,32 @@ class SortingVisualizer:
                 self.reset_button.get_event(event)
                 self.new_array_button.get_event(event)
 
-            if self.array_change:
-                self.array_change = False
-                self.draw(line_info=(None,None,None,None))
-            if self.run_algo == True:
+            #logic
+            if not self.generator:
                 algo = self.get_sorting_algorithm()
-                if self.generator == None:
-                    self.generator = algo(self.line_array)
-                while self.run_algo:
-                    for line_info in self.generator:
-                        if line_info == 'Complete':
-                            self.run_algo = False
-                            self.complete = True
-                            self.update_lines(line_info=(None, None,None, None))
-                        elif self.run_algo:
-                            self.update_lines(line_info)
-                        else:
-                            self.gen_last = line_info
-                            break
-            if self.gen_last:
-                self.draw(self.gen_last)
+                self.generator = algo(self.line_array)
+
+            if self.run_algo:
+                try:
+                    line_info = next(self.generator)
+                    self.gen_last = line_info
+                except StopIteration:
+                    line_info = (None,None,None,None)
+                    self.gen_last = None
+
+            elif not self.run_algo:
+                if self.gen_last:
+                    line_info = self.gen_last
+                elif self.array_change:
+                    self.array_change = False
+                    line_info = (None,None,None,None)
+                else:
+                    line_info = (None,None,None,None)
             else:
-                self.draw(line_info=(None,None,None,None))
+                pass
+
+            self.draw(line_info)
+            pygame.time.wait(10)
 
 
     def get_sorting_algorithm(self):
@@ -126,6 +130,7 @@ class SortingVisualizer:
         the given algorithm, and then handling how the generator runs to produce
         output on the surface. Contains a pause feature, but adding last value
         to a variable when the generator main loop breaks."""
+        algo=self.get_sorting_algorithm()
         if self.generator == None:
             self.generator = algo(self.line_array)
         while self.run_algo:
@@ -235,6 +240,7 @@ class SortingVisualizer:
         """Updates the lines in the program.  Does so by calling the draw
         function when the algorithms are running."""
         for event in pygame.event.get():
+            print('second event loop')
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
