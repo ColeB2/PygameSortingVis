@@ -26,9 +26,6 @@ class Button:
             color of button while button is hovered over, default (255,51,51)
         font_color: Tuple formatted -> font_color=(XXX,YYY,ZZZ) - RGB values for
             color of the text, default (255,255,255)
-        font_hover_color: Tuple formatted -> font_hover_color=(XXX,YYY,ZZZ) -
-            RGB value for color of text on button hover, default None.
-
         resize: Bool, Whether or not to use the built in resize function.
         function: Function, the function the button needs to perform on click.
             Passed as so, Button(function=button_function). -> This created a
@@ -40,8 +37,6 @@ class Button:
         self.function = function
         self.optional_settings(kwargs)
         self.render_text()
-        self.function = function
-        self.click = pygame.mouse.get_pressed()
         self.clicked = False
         self.hovered = False
 
@@ -55,12 +50,13 @@ class Button:
 
 
     def optional_settings(self, kwargs):
+        """Method used to change optional settings on button."""
         options = {'text': None,
                    'font': pygame.font.Font(None, 25),
                    'color': (255,51,51),
                    'hover_color': (0,255,128),
                    'font_color': (255,255,255),
-                   'font_hover_color': None,
+                   'run_on_release': True,
                    }
 
         for kwarg in kwargs:
@@ -72,61 +68,56 @@ class Button:
 
 
     def get_event(self, event, *args):
+        """Gets events from pygame event loop to pass on to button."""
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            self._handle_button_click(*args)
+            self._handle_click(*args)
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            self._handle_release(*args)
 
 
-    def _handle_button_click(self, *args):
+    def _handle_click(self, *args):
         """For internal use. Handles how the button reacts, ie calls function,
         on a mouse click event, if the function exists.
         params:
             *args
         """
         if self.rect.collidepoint(pygame.mouse.get_pos()):
-            #self.clicked = True
-            self.function(*args)
+            self.clicked = True
+            if not self.run_on_release:
+                self.function(*args)
 
-    def button_hover(self):
+
+
+    def _handle_release(self, *args):
+        if self.clicked and self.run_on_release:
+            self.function(*args)
+        self.clicked=False
+
+
+    def _handle_hover(self):
+        """For internal use. Handles color changes on button hovering."""
         if self.rect.collidepoint(pygame.mouse.get_pos()):
             if self.hovered == False:
                 self.hovered = True
         else:
             self.hovered = False
 
+
     def update(self, surface, *args):
+        """Main update function, used in main loop to be called on every loop"""
         color = self.color
         text = self.text
-        self.button_hover()
+        self._handle_hover()
         if self.clicked and self.hover_color:
             color = self.hover_color
-        elif self.hovered:
+        elif self.hovered and self.hover_color:
             color = self.hover_color
 
+
         pygame.draw.rect(surface, color, self.rect)
-        surface.blit(self.pygame_text, self.text_rect)
-
-
-
-    def _handle_button_logic(self, *args):
-        """For internal use. Handles all the logic of the button. Does so by
-        checking for collision, and depending on collision, drawing the button,
-        and checking for clicks."""
-        if self.rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(surface, self.hover_color, self.rect)
-            surface.blit(self.pygame_text, self.text_rect)
-            self._handle_button_click(*args)
-        else:
-            pygame.draw.rect(surface, self.color, self.rect)
+        if self.text:
             surface.blit(self.pygame_text, self.text_rect)
 
-
-    def create_button(self, *args):
-        """Main Button creation method
-        Parameters:
-            *args: *args other arguments that may need to be passed on to the
-        function method which will be called by the button class.
-        """
-        self._handle_button_logic(*args)
 
 
 if __name__ == '__main__':
