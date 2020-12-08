@@ -32,6 +32,8 @@ Known Bugs:
 -Running program again with already solved array - being able to
 - shell sort will sometimes finish in a compare viewset
 - next button sometimes crashes - stop iteration?
+
+
 """
 """Pygame code to set up surface"""
 pygame.init()
@@ -72,12 +74,28 @@ class SortingVisualizer:
 
                 self.start_button.get_event(event)
                 self.pause_button.get_event(event)
+                self.next_button.get_event(event)
+                self.reset_button.get_event(event)
+                self.new_array_button.get_event(event)
 
             if self.array_change:
                 self.array_change = False
                 self.draw(line_info=(None,None,None,None))
             if self.run_algo == True:
-                self.sort_handler(algo=self.get_sorting_algorithm())
+                algo = self.get_sorting_algorithm()
+                if self.generator == None:
+                    self.generator = algo(self.line_array)
+                while self.run_algo:
+                    for line_info in self.generator:
+                        if line_info == 'Complete':
+                            self.run_algo = False
+                            self.complete = True
+                            self.update_lines(line_info=(None, None,None, None))
+                        elif self.run_algo:
+                            self.update_lines(line_info)
+                        else:
+                            self.gen_last = line_info
+                            break
             if self.gen_last:
                 self.draw(self.gen_last)
             else:
@@ -150,7 +168,8 @@ class SortingVisualizer:
     def next_button_function(self):
         """CREATE ALGORITHM GENERATOR FUNCTION"""
         if self.generator == None:
-            self.generator = self.current_algorithm(self.line_array)
+            algo = self.get_sorting_algorithm()
+            self.generator = algo(self.line_array)
         line_info = next(self.generator)
         self.gen_last = (line_info)
 
@@ -178,24 +197,29 @@ class SortingVisualizer:
 
 
     def draw_menu(self):
-        #self.MenuUI.create_start_button(self.start_button_function)
-        # self.MenuUI.create_pause_button(self.pause_button_function)
-        # self.MenuUI.create_next_button(self.next_button_function)
-        # self.MenuUI.create_reset_button(self.reset_button_function)
-        # self.MenuUI.create_new_array_button(self.new_array_function)
-        # self.MenuUI.create_algo_buttons(self.algo_button_function)
         self.start_button.update(surface)
         self.pause_button.update(surface)
+        self.next_button.update(surface)
+        self.reset_button.update(surface)
+        self.new_array_button.update(surface)
 
 
     def create_buttons(self):
         self.start_button = Button(rect=(STARTBTN_X, BTN_Y2, 100, 50),
-            font_size=25, color=STARTBTNCOL1, color2=STARTBTNCOL2, text='Start',
+            color=STARTBTNCOL1, hover_color=STARTBTNCOL2, text='Start',
             function=self.start_button_function)
         self.pause_button = Button(rect=(PAUSEBTN_X, BTN_Y2, 100, 50),
-            font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='Pause',
+            color=PAUSEBTNCOL1, hover_color=PAUSEBTNCOL2, text='Pause',
             function=self.pause_button_function)
-
+        self.next_button = Button(rect=(NEXTBTN_X, BTN_Y2, 100, 50),
+            color=PAUSEBTNCOL1, hover_color=PAUSEBTNCOL2, text='>',
+            function=self.next_button_function)
+        self.reset_button = Button(rect=(NEXTBTN_X+125, BTN_Y2, 100, 50),
+            color=PAUSEBTNCOL1, hover_color=PAUSEBTNCOL2, text='Reset',
+            function=self.reset_button_function)
+        self.new_array_button = Button(rect=(NEXTBTN_X+250, BTN_Y2, 100, 50),
+            color=PAUSEBTNCOL1, hover_color=PAUSEBTNCOL2, text='New Array',
+            function=self.new_array_function)
 
 
     def draw(self, line_info):
@@ -214,6 +238,11 @@ class SortingVisualizer:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+            self.start_button.get_event(event)
+            self.pause_button.get_event(event)
+            self.next_button.get_event(event)
+            self.reset_button.get_event(event)
+            self.new_array_button.get_event(event)
 
 
 
