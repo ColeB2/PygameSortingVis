@@ -10,102 +10,98 @@ from buttons import Button
 class DropDown:
     """
     """
-    def __init__(self, x=0, y=0, width=50, height=20, font_size=25,
-        color=(255,51,51), color2=(0,255,128), font='arialblack',
-        font_color=(255,255,255), text='Text', resize=False, display=None):
-
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.font_size = font_size
-        self.color = color
-        self.color2 = color2
-        self.font = font
-        self.font_color = font_color
-        self.text = self.text
-        self.resize = resize
-        self.display = display
-        self.function = function
-
-        self.mouse = pygame.mouse.get_pos()
-        self.click = pygame.mouse.get_pressed()
+    def __init__(self, rect, **kwargs):
+        self.rect = pygame.Rect(rect)
+        self.optional_settings(kwargs)
+        self.render_text()
         self.clicked = False
+        self.hovered = False
 
-        self.num_menu_option = 0
+        self.y = self.rect[1]
+        self.h = self.rect[3]
+        self.num_options = 0
+        self.all_menu_items = []
 
+        self.create_menu()
 
-    def _drop_down_menu(self, func):
-        for i in range(len(self.drop_down_list)):
-            new_option = Button(
-                x=self.x, y=(self.y + (i*height)), width=self.width,
-                height=self.height, font_size=self.font_size, color=self.color,
-                color2=self.color2, text=self.text, display=self.display,
-                function=func
-
-            )
-
-
-    def display_menu_function(self, menu_items):
-        self.new_menu_items()
+    def open_menu(self):
+        print(self.all_menu_items)
+        for button in self.all_menu_items:
+            print(button[0])
+            button[0].update(button[1])
 
     def create_menu(self):
-        self.drop_down_button = Button(x=self.x, y=self.y,width=self.width,
-            height=self.height, font_size=self.font_size, color=self.color,
-            font=self.font, font_color=self.font_color, text=self.text,
-            resize=self.resize, display=self.display, function=None)
+        self.menu = Button(rect=self.rect, function=self.open_menu, text='DropDown')
 
 
-    def new_menu_item(self, func, text):
-        self.num_menu_option += 1
-        
-        new_option = Button(
-            x=self.x, y=self.y+(self.num_menu_option*height), width=self.width,
-            height=self.height, font_size=self.font_size, color=self.color,
-            color2=self.color2, text=text, display=self.display,
-            function=func
-        )
-        new_option.create_button()
+    def render_text(self):
+        """Internal method used to pre render the button text."""
+        if self.text:
+            self.pygame_text = self.font.render(self.text, True, self.font_color)
+            self.text_rect = self.pygame_text.get_rect()
+            self.text_rect.center = self.rect.center
 
+
+    def optional_settings(self, kwargs):
+        """Method used to change optional settings on button."""
+        options = {'text': None,
+                   'font': pygame.font.Font(None, 25),
+                   'color': (0,255,128),
+                   'hover_color': (255,51,51),
+                   'font_color': (255,255,255),
+                   'run_on_release': True,
+                   }
+
+        for kwarg in kwargs:
+            if kwarg in options:
+                options[kwarg] = kwargs[kwarg]
+            else:
+                raise AttributeError(f"Button option {kwarg} does not exist")
+        self.__dict__.update(options)
+
+
+    def new_option(self, func, surface):
+        b = Button(rect=(self.rect[0], (self.y+(self.h*(1+self.num_options))),
+                         self.rect[2], self.h),
+                         function=func)
+        self.num_options += 1
+        self.all_menu_items.append((b,surface))
+
+    def get_event(self, event):
+        for button in self.all_menu_items:
+            button[0].get_event(event)
+
+    def update(self, surface):
+        self.menu.update(surface)
 
 if __name__ == '__main__':
-    import sys
-    import pygame
-
     pygame.init()
-    FPS=20
-    fps_clock = pygame.time.Clock()
+    surface = pygame.display.set_mode((600,600))
+    surface.fill((255,255,255))
+    pygame.display.set_caption('Button Example')
 
-    screen = pygame.display.set_mode((600,600))
-    screen.fill((255,255,255))
-    pygame.display.set_caption('Button Test')
-    m = pygame.mouse.get_pos()
-    c = pygame.mouse.get_pressed()
+    def func():
+        print('Hello World')
 
-    def print_func(string='Hello World'):
-        print(string)
-    def make_but(func):
-        b = Button(x=250, y=275, width=100,height=50, font_size=25, color=(255,51,51),
-            color2=(0,255,128), text='HW',display=screen,function=func)
-        b.create_button('click')
-
-    def make_menu():
-        b = DropDown(x=250, y=275, width=100,height=50, font_size=25, color=(255,51,51),
-            color2=(0,255,128), text='HW',display=screen,function=func)
+    b = Button(rect=(250,250,100,50), function=func, text='Hello World')
+    dd = DropDown(rect=(0,0,200,25), text='Menu')
+    dd.new_option(func=func, surface=surface)
+    dd.new_option(func=func, surface=surface)
 
 
-    def draw():
-        screen.fill((255,255,255))
-        make_but(print_func)
-        pygame.display.update()
-        fps_clock.tick(FPS)
+
 
     run = True
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
                 run = False
 
-            draw()
+            b.get_event(event)
+            dd.menu.get_event(event)
+            dd.get_event(event)
+
+
+        b.update(surface)
+        dd.update(surface)
+        pygame.display.update()

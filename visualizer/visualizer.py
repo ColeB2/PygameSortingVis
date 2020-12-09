@@ -206,6 +206,10 @@ class SortingVisualizer:
             color=PAUSEBTNCOL1, hover_color=PAUSEBTNCOL2, text='New Array',
             function=self.new_array_function)
 
+    def create_algo_buttons(self):
+        self.bubble_sort_button = Button(rect=0,0,100,50, text='Bubble',
+            function=self.bubble_sort_function)
+
 
     def draw(self, line_info):
         """Handles the drawing to the surface, only method that contains the
