@@ -53,8 +53,8 @@ class Button:
         """Method used to change optional settings on button."""
         options = {'text': None,
                    'font': pygame.font.Font(None, 25),
-                   'color': (255,51,51),
-                   'hover_color': (0,255,128),
+                   'color': (0,255,128),
+                   'hover_color': (255,51,51),
                    'font_color': (255,255,255),
                    'run_on_release': True,
                    }
@@ -121,4 +121,26 @@ class Button:
 
 
 if __name__ == '__main__':
-    pass
+    pygame.init()
+    surface = pygame.display.set_mode((600,600))
+    surface.fill((255,255,255))
+    pygame.display.set_caption('Button Example')
+
+    def func():
+        print('Hello World')
+
+    b = Button(rect=(250,250,100,50), function=func, text='Hello World')
+
+
+
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+            b.get_event(event)
+
+
+        b.update(surface)
+        pygame.display.update()
