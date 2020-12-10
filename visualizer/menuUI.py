@@ -126,6 +126,6 @@ class LineUI:
                 color = LINE_SWAP
 
             line_width = ceil(DIS_X/self.num_lines)
-            line_rect = [line * line_width, 0,
+            line_rect = [line * line_width, 25,
                         line_width-1, self.line_array[line]]
             pygame.draw.rect(self.surface, color, line_rect)

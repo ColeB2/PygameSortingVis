@@ -11,12 +11,12 @@ if __name__ == '__main__':
     import os, sys
     sys.path.append(os.path.join('.', 'algorithms'))
     from algorithms import (
-        bubble_sort, fast_bubble_sort, selection_sort, insertion_sort,
+        fast_bubble_sort, selection_sort, insertion_sort,
         shell_sort, merge_sort, heap_sort, quick_sort
         )
 else:
     from algorithms.algorithms import (
-        bubble_sort, fast_bubble_sort, selection_sort, insertion_sort,
+        fast_bubble_sort,selection_sort, insertion_sort,
         shell_sort, merge_sort, heap_sort, quick_sort
         )
 """
@@ -52,13 +52,13 @@ class SortingVisualizer:
         self.line_array = []
         self.line_array_c = []
         self.generate_list()
-        self.current_algorithm = 'Insertion'
+        self.current_algorithm = 'Bubble'
+        self.algorithm_changed = 'False'
         self.run = True
         self.run_algo = False
         self.generator = None
         self.gen_last = None
         self.array_change = False
-        self.complete = False
         self.MenuUI = MenuUI(surface=surface)
         self.LineUI = LineUI(surface=surface, num_lines=self.num_lines,
             line_array=self.line_array)
@@ -81,12 +81,23 @@ class SortingVisualizer:
                 self.reset_button.get_event(event)
                 self.new_array_button.get_event(event)
 
-                self.bubble_sort_button.get_event(event)
+                self.bubble_sort_button.get_event(event,  self.bubble_sort_button.text)
+                self.selection_sort_button.get_event(event,  self.selection_sort_button.text)
+                self.insertion_sort_button.get_event(event,  self.insertion_sort_button.text)
+                self.shell_sort_button.get_event(event,  self.shell_sort_button.text)
+                self.merge_sort_button.get_event(event,  self.merge_sort_button.text)
+                self.quick_sort_button.get_event(event,  self.quick_sort_button.text)
+                self.heap_sort_button.get_event(event,  self.heap_sort_button.text)
 
             """Main Loop Logic Handling"""
             if not self.generator:
                 algo = self.get_sorting_algorithm()
                 self.generator = algo(self.line_array)
+
+            if self.algorithm_changed:
+                algo = self.get_sorting_algorithm()
+                self.generator = algo(self.line_array)
+                self.algorithm_changed = False
 
             if self.run_algo:
                 try:
@@ -95,6 +106,7 @@ class SortingVisualizer:
                 except StopIteration:
                     line_info = (None,None,None,None)
                     self.gen_last = None
+                    self.run_algo = False
 
             elif not self.run_algo:
                 if self.gen_last:
@@ -113,8 +125,6 @@ class SortingVisualizer:
 
     def get_sorting_algorithm(self):
         if self.current_algorithm == 'Bubble':
-            return bubble_sort
-        elif self.current_algorithm == 'Fast Bubble':
             return fast_bubble_sort
         elif self.current_algorithm == 'Selection':
             return selection_sort
@@ -126,7 +136,7 @@ class SortingVisualizer:
             return merge_sort
         elif self.current_algorithm == 'Heap':
             return heap_sort
-        elif self.current_algorithm == 'Quick Sort':
+        elif self.current_algorithm == 'Quick':
             return quick_sort
 
 
@@ -148,17 +158,17 @@ class SortingVisualizer:
 
 
     def start_button_function(self):
-        if self.run_algo == False and self.complete == False:
+        if self.run_algo == False:
             self.run_algo = True
 
 
     def next_button_function(self):
-        """CREATE ALGORITHM GENERATOR FUNCTION"""
-        if self.generator == None:
-            algo = self.get_sorting_algorithm()
-            self.generator = algo(self.line_array)
-        line_info = next(self.generator)
-        self.gen_last = (line_info)
+        try:
+            line_info = next(self.generator)
+            self.gen_last = line_info
+        except StopIteration:
+            line_info = (None,None,None,None)
+            self.gen_last = None
 
 
     def _reset(self):
@@ -166,7 +176,6 @@ class SortingVisualizer:
         self.array_change = True
         self.generator = None
         self.gen_last = None
-        self.complete = False
 
 
     def reset_button_function(self):
@@ -183,6 +192,15 @@ class SortingVisualizer:
 
     def algo_button_function(self, button_text):
         self.current_algorithm = str(button_text)
+        self.algorithm_changed = True
+
+    def current_algo_text(self):
+        self.font = pygame.font.Font(None, 25)
+        self.pg_text = self.font.render(f"Current Algorithm: {self.current_algorithm}", True, (0,0,0))
+        self.text_rect = self.pg_text.get_rect()
+        self.text_rect.center = pygame.Rect((800,0, 400, 25)).center
+        surface.blit(self.pg_text, self.text_rect)
+
 
 
     def draw_menu(self):
@@ -193,6 +211,14 @@ class SortingVisualizer:
         self.new_array_button.update(surface)
 
         self.bubble_sort_button.update(surface)
+        self.selection_sort_button.update(surface)
+        self.insertion_sort_button.update(surface)
+        self.shell_sort_button.update(surface)
+        self.merge_sort_button.update(surface)
+        self.quick_sort_button.update(surface)
+        self.heap_sort_button.update(surface)
+
+        self.current_algo_text()
 
 
     def create_buttons(self):
@@ -214,6 +240,18 @@ class SortingVisualizer:
 
     def algo_buttons(self):
         self.bubble_sort_button = Button(rect=(0,0,100,25), text='Bubble',
+            function=self.algo_button_function)
+        self.selection_sort_button = Button(rect=(100,0,100,25), text='Selection',
+            function=self.algo_button_function)
+        self.insertion_sort_button = Button(rect=(200,0,100,25), text='Insertion',
+            function=self.algo_button_function)
+        self.shell_sort_button = Button(rect=(300,0,100,25), text='Shell',
+            function=self.algo_button_function)
+        self.merge_sort_button = Button(rect=(400,0,100,25), text='Merge',
+            function=self.algo_button_function)
+        self.quick_sort_button = Button(rect=(500,0,100,25), text='Quick',
+            function=self.algo_button_function)
+        self.heap_sort_button = Button(rect=(600,0,100,25), text='Heap',
             function=self.algo_button_function)
 
 
