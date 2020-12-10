@@ -21,6 +21,7 @@ else:
         )
 """
 TODO LIST:
+- Get minimum viable up, then play with changing options.
 - Further refactoring
 - Break up code, UI things and functional things
 - Add more algorithms ---- Heap, Merge(more work), Quick-Sort
@@ -67,6 +68,7 @@ class SortingVisualizer:
     def main_loop(self):
         """Main Program Loop pygame."""
         self.create_buttons()
+        self.algo_buttons()
         while self.run:
             """Main Loop Event Handling"""
             for event in pygame.event.get():
@@ -78,6 +80,8 @@ class SortingVisualizer:
                 self.next_button.get_event(event)
                 self.reset_button.get_event(event)
                 self.new_array_button.get_event(event)
+
+                self.bubble_sort_button.get_event(event)
 
             """Main Loop Logic Handling"""
             if not self.generator:
@@ -188,6 +192,8 @@ class SortingVisualizer:
         self.reset_button.update(surface)
         self.new_array_button.update(surface)
 
+        self.bubble_sort_button.update(surface)
+
 
     def create_buttons(self):
         self.start_button = Button(rect=(STARTBTN_X, BTN_Y2, 100, 50),
@@ -206,9 +212,9 @@ class SortingVisualizer:
             color=PAUSEBTNCOL1, hover_color=PAUSEBTNCOL2, text='New Array',
             function=self.new_array_function)
 
-    def create_algo_buttons(self):
-        self.bubble_sort_button = Button(rect=0,0,100,50, text='Bubble',
-            function=self.bubble_sort_function)
+    def algo_buttons(self):
+        self.bubble_sort_button = Button(rect=(0,0,100,25), text='Bubble',
+            function=self.algo_button_function)
 
 
     def draw(self, line_info):
