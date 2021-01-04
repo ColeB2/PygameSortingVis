@@ -5,6 +5,7 @@ drawing and visualizing purposes.
 """
 import copy
 
+
 """BUBBLE SORT"""
 def bubble_sort(array):
     n = len(array)
@@ -40,8 +41,6 @@ def fast_bubble_sort(array):
         if swap == False:
             break
     yield 'Complete'
-            #raise StopIteration()
-
 
 
 """Selection Sort"""
@@ -129,57 +128,6 @@ def shell_sort(array):
     yield None, None, None, None, ('shell', -1, -1)
     yield 'Complete'
 
-"""Merge Sort"""
-"""Deprecated, not in use, further refactoring and tinkering needed to be of
-and use. For code of merge sort used in program please look below."""
-def merge_sort(array):
-    n = len(array)
-    yield from merge(array)
-    yield 'Complete'
-
-def merge(array):
-    yield None, None, None, None
-    n = len(array)
-    if n > 1:
-        mid = len(array) // 2
-        left = array[:mid]
-        right = array[mid:]
-
-        if n > 1:
-            yield from merge(left)
-            yield from merge(right)
-
-        left_index = 0
-        right_index = 0
-        main_index = 0
-        yield None, None, None, None
-        print(array)
-        while left_index < len(left) and right_index < len(right):
-            if left[left_index] < right[right_index]:
-                array[main_index] = left[left_index]
-                yield None, None, None, None
-                left_index += 1
-            else:
-                array[main_index] = right[right_index]
-                yield None, None, None, None
-                right_index += 1
-            main_index += 1
-
-        while left_index < len(left):
-            array[main_index] = left[left_index]
-            yield None, None, None, None
-            left_index += 1
-            main_index += 1
-
-
-        while right_index < len(right):
-            array[main_index] = right[right_index]
-            yield None, None, None, None
-            right_index += 1
-            main_index += 1
-        # yield None, None, None, None, ('merge')
-
-
 
 """Merge Sort, adjusted from code @
 https://github.com/Orangefish/algo/blob/master/sorting_and_search/sort_merge.py
@@ -227,6 +175,7 @@ def merge_sort(array, l=0, u=None):
     if array == a:
         yield 'Complete'
 
+
 def wmerge(array, i, m, j, n, w):
     """
     Merge subarrays [i, m) and [j, n) into work area w.
@@ -258,6 +207,7 @@ def wmerge(array, i, m, j, n, w):
         j += 1
         w += 1
 
+
 def wsort(array, l, u, w):
     """
     Sort subarray [l, u) and put reuslt into work area w.
@@ -275,7 +225,6 @@ def wsort(array, l, u, w):
             yield None, None, l, w
             l +=1
             w +=1
-
 
 
 '''Heap Sort'''
@@ -323,7 +272,6 @@ def heap_sort(array):
             yield 'Complete'
 
 
-
 """Quick Sort - Lomuto-Partition"""
 def quick_sort(array):
     n = len(array)
@@ -355,7 +303,6 @@ def quick_sort_helper(array, low, high):
         '''PARTITION FUNCTION END'''
         yield from quick_sort_helper(array, low, pivot_index-1)
         yield from quick_sort_helper(array, pivot_index+1, high)
-
 
 
 if __name__ == '__main__':

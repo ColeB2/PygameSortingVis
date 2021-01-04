@@ -4,49 +4,6 @@ from pyVariables import *
 from math import ceil
 
 
-
-class MenuUI:
-    """Handles the drawing aspect of ui elements"""
-    """Currently not in use/deprecated, adjustments/refactoring needs to be
-        made for future use."""
-    def __init__(self, surface):
-        self.surface = surface
-
-
-    def create_start_button(self, func):
-        self.start_button = Button(rect=(STARTBTN_X, BTN_Y2, 100, 50),
-            font_size=25, color=STARTBTNCOL1, color2=STARTBTNCOL2, text='Start',
-            function=func)
-        #self.start_button.create_button()
-
-
-    def create_pause_button(self, func):
-        self.pause_button = Button(rect=(PAUSEBTN_X, BTN_Y2, 100, 50),
-            font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='Pause',
-            function=func)
-
-
-    def create_next_button(self, func):
-        self.next_button = Button(rect=(NEXTBTN_X, BTN_Y2, 100, 50),
-            font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='>',
-            display=self.surface, function=func)
-        self.next_button.create_button()
-
-
-    def create_reset_button(self, func):
-        self.reset_button = Button(rect=(NEXTBTN_X+125, BTN_Y2, 100, 50),
-            font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='Reset',
-            display=self.surface, function=func)
-        self.reset_button.create_button()
-
-
-    def create_new_array_button(self,func):
-        self.new_array_button = Button(rect=(NEXTBTN_X+250, BTN_Y2, 100, 50),
-            font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='New Array',
-            display=self.surface, function=func)
-        self.new_array_button.create_button()
-
-
 class LineUI:
     """Handles the drawing of the lines"""
     def __init__(self, surface, num_lines, line_array):
@@ -101,7 +58,6 @@ class LineUI:
 
 
                 if line_info[4][0] == 'splitting':
-                    # print(line)
                     if line == line_info[4][3]:
                         color = INSERTION_LINE
                     elif line < line_info[4][3]:

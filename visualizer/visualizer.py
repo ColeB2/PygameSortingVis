@@ -3,7 +3,7 @@ from random import randint
 from math import ceil
 from pyVariables import *
 from buttons import Button
-from menuUI import MenuUI, LineUI
+from menuUI import LineUI
 import copy
 
 """Import set up to be able to run from visalizer.py/main.py for dev purposes"""
@@ -57,7 +57,6 @@ class SortingVisualizer:
         self.generator = None
         self.gen_last = None
         self.array_change = False
-        self.MenuUI = MenuUI(surface=surface)
         self.LineUI = LineUI(surface=surface, num_lines=self.num_lines,
             line_array=self.line_array)
 
