@@ -24,8 +24,6 @@ TODO LIST:
 - Get minimum viable up, then play with changing options.
 - Further refactoring
 - Break up code, UI things and functional things
-- Add more algorithms ---- Heap, Merge(more work), Quick-Sort
-- Algorithm select dropdown menu?
 - Speed select buttons, slider?
 - Rewind button?
 
