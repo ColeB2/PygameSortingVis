@@ -7,6 +7,8 @@ from math import ceil
 
 class MenuUI:
     """Handles the drawing aspect of ui elements"""
+    """Currently not in use/deprecated, adjustments/refactoring needs to be
+        made for future use."""
     def __init__(self, surface):
         self.surface = surface
 
@@ -43,17 +45,6 @@ class MenuUI:
             font_size=25, color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text='New Array',
             display=self.surface, function=func)
         self.new_array_button.create_button()
-
-
-    def create_algo_buttons(self, func, *args):
-        algos = ['Bubble', 'Fast Bubble', 'Selection', 'Insertion', 'Shell',
-            'Merge', 'Quick Sort', 'Heap']
-        for i in range(len(algos)):
-            new_button = Button(
-                rect=( (50+(i*125)), BTN_Y, 100, 50), font_size=25,
-                color=PAUSEBTNCOL1, color2=PAUSEBTNCOL2, text=algos[i],
-                display=self.surface, function=func)
-            new_button.create_button(new_button.text)
 
 
 class LineUI:

@@ -118,7 +118,7 @@ class SortingVisualizer:
 
             """Main Loop Drawing"""
             self.draw(line_info)
-            pygame.time.wait(10)
+            pygame.time.wait(100)
 
 
     def get_sorting_algorithm(self):

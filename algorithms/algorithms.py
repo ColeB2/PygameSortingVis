@@ -130,6 +130,8 @@ def shell_sort(array):
     yield 'Complete'
 
 """Merge Sort"""
+"""Deprecated, not in use, further refactoring and tinkering needed to be of
+and use. For code of merge sort used in program please look below."""
 def merge_sort(array):
     n = len(array)
     yield from merge(array)
@@ -177,59 +179,6 @@ def merge(array):
             main_index += 1
         # yield None, None, None, None, ('merge')
 
-
-
-
-
-
-
-
-
-
-
-'''Heap Sort'''
-def heap_sort(array):
-    n = len(array)
-    comp = copy.copy(array)
-    comp.sort()
-    '''BUILDINGMAXHEAP FUNCTION'''
-    for i in range(n):
-        '''if arr[i](child) > arr[x]parent:'''
-        if array[i] > array[int((i - 1) / 2)]:
-            j = i
-            while array[j] > array[int((j - 1) / 2)]:
-                yield j, int((j-1)/2), None, None
-                (array[j],
-                 array[int((j - 1) / 2)]) = (array[int((j - 1) / 2)],
-                                           array[j])
-                yield None, None, int((j-1)/2), j
-                j = int((j - 1) / 2)
-
-    '''HEAP SORT'''
-    for i in range(n - 1, 0, -1):
-        yield i, 0, None, None
-        array[0], array[i] = array[i], array[0]
-        yield None, None, i, 0
-
-        j, index = 0, 0
-
-        while True:
-            index = 2 * j + 1
-
-            if (index < (i - 1) and
-                array[index] < array[index + 1]):
-                index += 1
-
-            if index < i and array[j] < array[index]:
-                yield index, j, None, None
-                array[j], array[index] = array[index], array[j]
-                yield None, None, index, j
-
-            j = index
-            if index >= i:
-                break
-        if comp == array:
-            yield 'Complete'
 
 
 """Merge Sort, adjusted from code @
@@ -326,6 +275,54 @@ def wsort(array, l, u, w):
             yield None, None, l, w
             l +=1
             w +=1
+
+
+
+'''Heap Sort'''
+def heap_sort(array):
+    n = len(array)
+    comp = copy.copy(array)
+    comp.sort()
+    '''BUILDINGMAXHEAP FUNCTION'''
+    for i in range(n):
+        '''if arr[i](child) > arr[x]parent:'''
+        if array[i] > array[int((i - 1) / 2)]:
+            j = i
+            while array[j] > array[int((j - 1) / 2)]:
+                yield j, int((j-1)/2), None, None
+                (array[j],
+                 array[int((j - 1) / 2)]) = (array[int((j - 1) / 2)],
+                                           array[j])
+                yield None, None, int((j-1)/2), j
+                j = int((j - 1) / 2)
+
+    '''HEAP SORT'''
+    for i in range(n - 1, 0, -1):
+        yield i, 0, None, None
+        array[0], array[i] = array[i], array[0]
+        yield None, None, i, 0
+
+        j, index = 0, 0
+
+        while True:
+            index = 2 * j + 1
+
+            if (index < (i - 1) and
+                array[index] < array[index + 1]):
+                index += 1
+
+            if index < i and array[j] < array[index]:
+                yield index, j, None, None
+                array[j], array[index] = array[index], array[j]
+                yield None, None, index, j
+
+            j = index
+            if index >= i:
+                break
+        if comp == array:
+            yield 'Complete'
+
+
 
 """Quick Sort - Lomuto-Partition"""
 def quick_sort(array):
