@@ -3,7 +3,8 @@ Sorting Visualizer, remade using Pygame
 
 # Technologies
 Python 3.8.2
-Pygame 2.0.0 https://www.pygame.org
+
+[Pygame](https://www.pygame.org) 2.0.0 
 
 # Acknowledgements
 
