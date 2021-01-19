@@ -15,3 +15,6 @@ Python 3.8.2
 # License
 [MIT](https://choosealicense.com/licenses/mit/)
 
+# Visualizer
+![Image](https://github.com/ColeB2/PygameSortingVis/blob/master/assets/sortvis.png)
+
