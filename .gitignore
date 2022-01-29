@@ -110,6 +110,10 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+pySortingVisVenv
+.pySortingVisVenv
+pySortingVisVenv/
+
 
 # Spyder project settings
 .spyderproject
@@ -128,3 +132,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# Notes for project
+notes.txt
